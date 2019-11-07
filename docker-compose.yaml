@@ -1,0 +1,52 @@
+version: '3.7'
+
+volumes:
+  gnmp: {}
+  app: {}
+
+networks:
+  ingress:
+    external: true
+  backend:
+    external: false
+
+services:
+  nginx:
+    build: ./nginx
+    restart: unless-stoped
+    labels:
+      - traefik.enable=true
+      - traefik.backend=NMP
+      - traefik.port=80
+      - traefik.frontend.rule=Host:nmp.hola.com
+      - org_label_schema.group=monitoring
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/ngnix.conf
+      - app:/var/www/html
+    networks:
+      - ingress
+      - backend
+  php:
+    image: php:7.2-fpm
+    restart: unless-stoped
+    volume:
+      - app:/var/www/html/
+    networks:
+      - backend
+  mysql:
+    image: mysql:8.0.18
+    labels:
+      - org_label_schema.group=monitoring
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: dbName
+      MYSQL_USER: dbUser
+      MYSQL_PASSWORD: dbUserPassword
+      MYSQL_ROOT_PASSWORD: 'securePasswordRoot' 
+    volumes:
+      - gnmp-db:/var/lib/mysql
+    networks: 
+      - backend
+  node:
+    build:
