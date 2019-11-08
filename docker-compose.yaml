@@ -49,4 +49,7 @@ services:
     networks: 
       - backend
   node:
-    build:
+    build: ./node
+    restart: unless-stopped
+    labels:
+      - org_label_schema.group=monitoring
