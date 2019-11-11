@@ -1,7 +1,7 @@
 version: '3.7'
 
 volumes:
-  gnmp: {}
+  gnmp-db: {}
   app: {}
 
 networks:
@@ -13,7 +13,7 @@ networks:
 services:
   nginx:
     build: ./nginx
-    restart: unless-stoped
+    restart: unless-stopped
     labels:
       - traefik.enable=true
       - traefik.backend=NMP
@@ -28,8 +28,8 @@ services:
       - backend
   php:
     image: php:7.2-fpm
-    restart: unless-stoped
-    volume:
+    restart: unless-stopped
+    volumes:
       - app:/var/www/html/
     networks:
       - backend
@@ -49,7 +49,8 @@ services:
     networks: 
       - backend
   node:
-    build: ./node
+    # build: ./node
+    image: node:lts
     restart: unless-stopped
     labels:
       - org_label_schema.group=monitoring

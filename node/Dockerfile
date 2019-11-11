@@ -2,7 +2,7 @@ FROM node:lts as builder
 
 WORKDIR /tmp/app
 
-COPY package*.json ./
+COPY ../app/package*.json ./
 
 RUN npm install
 
