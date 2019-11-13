@@ -2,6 +2,7 @@ version: '3.7'
 
 volumes:
   gnmp-db: {}
+  gnmp-redis: {}
   app: {}
 
 networks:
