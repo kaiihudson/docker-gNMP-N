@@ -49,8 +49,14 @@ services:
     networks: 
       - backend
   node:
-    # build: ./node
-    image: node:lts
+    build: ./node
     restart: unless-stopped
+    labels:
+      - org_label_schema.group=monitoring
+  redis:
+    image: redis:5
+    command: redis-server --appendonly yes
+    volumes:
+      gnmp-redis:/data
     labels:
       - org_label_schema.group=monitoring
