@@ -1,13 +1,10 @@
-FROM node:lts-alpine as builder
-WORKDIR /tmp/app
-COPY ./app/package.json .
-RUN npm install
 
 FROM node:lts-alpine
-WORKDIR /usr/src/app
-COPY --from=builder /tmp/app/node_modules ./node_modules
+WORKDIR /var/www/html/
+
 COPY --chown=node:node ./app .
 USER node
+RUN npm install
 
 EXPOSE 3000
 

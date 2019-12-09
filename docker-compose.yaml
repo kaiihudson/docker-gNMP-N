@@ -13,7 +13,7 @@ networks:
 
 services:
   nginx:
-    build: ./nginx
+    build: ./config/nginx
     restart: unless-stopped
     labels:
       - traefik.enable=true
@@ -22,7 +22,7 @@ services:
       - traefik.frontend.rule=Host:${HOST}
       - org_label_schema.group=monitoring
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/ngnix.conf
+      - ./config/nginx/nginx.conf:/etc/nginx/ngnix.conf
       - ./app:/var/www/html
     networks:
       - ingress
@@ -50,7 +50,9 @@ services:
     networks: 
       - backend
   node:
-    build: ./node
+    build: 
+      context: .
+      dockerfile: ./config/node/Dockerfile
     restart: unless-stopped
     labels:
       - org_label_schema.group=monitoring
