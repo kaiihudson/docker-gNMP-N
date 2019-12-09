@@ -19,7 +19,7 @@ services:
       - traefik.enable=true
       - traefik.backend=NMP
       - traefik.port=80
-      - traefik.frontend.rule=Host:nmp.hola.com
+      - traefik.frontend.rule=Host:${HOST}
       - org_label_schema.group=monitoring
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/ngnix.conf
@@ -41,10 +41,10 @@ services:
     restart: unless-stopped
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: dbName
-      MYSQL_USER: dbUser
-      MYSQL_PASSWORD: dbUserPassword
-      MYSQL_ROOT_PASSWORD: 'securePasswordRoot' 
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} 
     volumes:
       - gnmp-db:/var/lib/mysql
     networks: 
@@ -58,6 +58,6 @@ services:
     image: redis:5
     command: redis-server --appendonly yes
     volumes:
-      gnmp-redis:/data
+      - gnmp-redis:/data
     labels:
       - org_label_schema.group=monitoring
