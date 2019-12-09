@@ -23,7 +23,7 @@ services:
       - org_label_schema.group=monitoring
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/ngnix.conf
-      - app:/var/www/html
+      - ./app:/var/www/html
     networks:
       - ingress
       - backend
@@ -31,7 +31,7 @@ services:
     image: php:7.2-fpm
     restart: unless-stopped
     volumes:
-      - app:/var/www/html/
+      - ./app:/var/www/html/
     networks:
       - backend
   mysql:
@@ -54,6 +54,8 @@ services:
     restart: unless-stopped
     labels:
       - org_label_schema.group=monitoring
+    volumes:
+      - ./app:/var/www/html
   redis:
     image: redis:5
     command: redis-server --appendonly yes
