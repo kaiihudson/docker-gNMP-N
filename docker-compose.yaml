@@ -19,21 +19,25 @@ services:
       - traefik.enable=true
       - traefik.backend=NMP
       - traefik.port=80
+      - traefik.docker.network=ingress
       - traefik.frontend.rule=Host:${HOST}
       - org_label_schema.group=monitoring
     volumes:
-      - ./config/nginx/nginx.conf:/etc/nginx/ngnix.conf
-      - ./app:/var/www/html
+      - ./config/nginx/nginx.conf:/etc/nginx/ngnix.conf:ro
+      - ./config/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./app:/var/www/apps
     networks:
       - ingress
       - backend
+  
   php:
     image: php:7.2-fpm
     restart: unless-stopped
     volumes:
-      - ./app:/var/www/html/
+      - ./app:/var/www/apps
     networks:
       - backend
+  
   mysql:
     image: mysql:8.0.18
     labels:
@@ -49,6 +53,7 @@ services:
       - gnmp-db:/var/lib/mysql
     networks: 
       - backend
+  
   node:
     build: 
       context: .
@@ -57,7 +62,8 @@ services:
     labels:
       - org_label_schema.group=monitoring
     volumes:
-      - ./app:/var/www/html
+      - ./app:/var/www/apps
+ 
   redis:
     image: redis:5
     command: redis-server --appendonly yes
